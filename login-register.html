@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login/Register - QuickDesk</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <div style="font-size: 32px; color: #00ffff; font-weight: bold; text-align:center;">
+      <i class="fa-solid fa-headset"></i> QuickDesk
+    </div>
+    <form id="authForm" class="form-section">
+      <input type="text" id="username" placeholder="Username" required />
+      <input type="password" id="password" placeholder="Password" required />
+      <input type="email" id="email" placeholder="Email (only for registration)" />
+      <div style="margin: 10px 0;">
+        <label><input type="radio" name="authMode" value="login" checked /> Login</label>
+        <label><input type="radio" name="authMode" value="register" /> Register</label>
+      </div>
+      <button type="submit">Continue</button>
+    </form>
+  </div>
+
+  <script>
+    document.getElementById("authForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+      const username = document.getElementById("username").value;
+      const password = document.getElementById("password").value;
+      const email = document.getElementById("email").value;
+      const mode = document.querySelector('input[name="authMode"]:checked').value;
+
+      let users = JSON.parse(localStorage.getItem("users") || "{}");
+
+      if (mode === "register") {
+        if (users[username]) {
+          alert("User already exists!");
+        } else {
+          users[username] = { password, email };
+          localStorage.setItem("users", JSON.stringify(users));
+          localStorage.setItem("loggedUser", username);
+          alert("Registered successfully! Notification email sent to " + email);
+          window.location.href = "dashboard.html";
+        }
+      } else if (mode === "login") {
+        if (users[username] && users[username].password === password) {
+          localStorage.setItem("loggedUser", username);
+          window.location.href = "dashboard.html";
+        } else {
+          alert("Invalid username or password!");
+        }
+      }
+    });
+  </script>
+</body>
+</html>
+
+
+
